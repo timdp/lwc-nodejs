@@ -8,6 +8,9 @@ const logUpdate = require('log-update')
 const yargs = require('yargs')
 const {PassThrough} = require('stream')
 
+const reWhitespace = /\s+/
+const reNewline = /\r?\n/g
+
 const {argv} = yargs
   .option('lines', { alias: 'l', boolean: true })
   .option('words', { alias: 'w', boolean: true })
@@ -22,10 +25,6 @@ if (!(argv.lines || argv.words || argv.chars || argv.bytes)) {
 
 const pipe = (...streams) => multipipe(...streams, { objectMode: true })
 
-const one = () => 1
-
-const countTokens = matcher => () => split(matcher, one)
-
 const countRaw = (countBuf, countStr) => () => through.obj((chunk, enc, cb) => {
   if (Buffer.isBuffer(chunk)) {
     cb(null, countBuf(chunk))
@@ -36,12 +35,30 @@ const countRaw = (countBuf, countStr) => () => through.obj((chunk, enc, cb) => {
   }
 })
 
+const countNewlines = () => through.obj((chunk, enc, cb) => {
+  let str = null
+  if (Buffer.isBuffer(chunk)) {
+    str = chunk.toString('utf8')
+  } else if (typeof chunk === 'string') {
+    str = chunk
+  } else {
+    cb(new Error('Unexpected input'))
+  }
+  let count = 0
+  while (reNewline.exec(str) != null) {
+    ++count
+  }
+  cb(null, count)
+})
+
+const countWords = () => split(reWhitespace, word => (word !== '') ? 1 : 0)
+
 const counters = []
 if (argv.lines) {
-  counters.push(countTokens(/\r?\n/))
+  counters.push(countNewlines)
 }
 if (argv.words) {
-  counters.push(countTokens(/\S+/))
+  counters.push(countWords)
 }
 if (argv.chars) {
   counters.push(countRaw(
