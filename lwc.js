@@ -72,6 +72,9 @@ const render = () => {
   logUpdate(totals.join(' '))
 }
 
-merge(outStreams)
-  .on('data', render)
-  .once('end', render)
+const outStream = merge(outStreams)
+outStream.once('end', render)
+if (process.stdout.isTTY) {
+  outStream.on('data', render)
+}
+outStream.resume()
