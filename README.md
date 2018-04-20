@@ -4,6 +4,8 @@
 
 A live-updating version of the UNIX [`wc` command](https://en.wikipedia.org/wiki/Wc_(Unix)).
 
+![](demo.gif)
+
 ## Installation
 
 ```bash
