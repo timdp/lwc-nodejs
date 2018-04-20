@@ -8,9 +8,13 @@ A live-updating version of the UNIX [`wc` command](https://en.wikipedia.org/wiki
 
 ## Installation
 
+With npm:
+
 ```bash
 npm install --global @timdp/lwc
 ```
+
+With Yarn:
 
 ```bash
 yarn global add @timdp/lwc
