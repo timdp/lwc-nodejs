@@ -9,7 +9,6 @@ const yargs = require('yargs')
 const {PassThrough} = require('stream')
 
 const reWhitespace = /\s+/
-const reNewline = /\r?\n/g
 
 const {argv} = yargs
   .option('lines', { alias: 'l', boolean: true })
@@ -36,19 +35,14 @@ const countRaw = (countBuf, countStr) => () => through.obj((chunk, enc, cb) => {
 })
 
 const countNewlines = () => through.obj((chunk, enc, cb) => {
-  let str = null
-  if (Buffer.isBuffer(chunk)) {
-    str = chunk.toString('utf8')
-  } else if (typeof chunk === 'string') {
-    str = chunk
-  } else {
-    cb(new Error('Unexpected input'))
-  }
   let count = 0
-  while (reNewline.exec(str) != null) {
+  const desired = Buffer.isBuffer(chunk) ? 10 : '\n'
+  let index = chunk.indexOf(desired)
+  while (index >= 0) {
     ++count
+    index = chunk.indexOf(desired, index + 1)
   }
-  cb(null, count)
+  cb(null, (count > 0) ? count : null)
 })
 
 const countWords = () => split(reWhitespace, word => (word !== '') ? 1 : 0)
