@@ -6,11 +6,11 @@ const through = require('through2')
 const merge = require('merge-stream')
 const logUpdate = require('log-update')
 const yargs = require('yargs')
-const {PassThrough} = require('stream')
+const { PassThrough } = require('stream')
 
 const reWhitespace = /\s+/
 
-const {argv} = yargs
+const { argv } = yargs
   .option('lines', { alias: 'l', boolean: true })
   .option('words', { alias: 'w', boolean: true })
   .option('chars', { alias: 'm', boolean: true })
