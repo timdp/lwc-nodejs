@@ -6,6 +6,9 @@ A live-updating version of the UNIX [`wc` command](https://en.wikipedia.org/wiki
 
 ![](demo.gif)
 
+**This is the Node.js version of lwc. You may also be interested in the
+[Go version](https://github.com/timdp/lwc-golang).**
+
 ## Installation
 
 With npm:
