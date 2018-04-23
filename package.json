@@ -1,7 +1,7 @@
 {
   "name": "@timdp/lwc",
   "description": "A live-updating version of the UNIX wc command.",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "author": {
     "name": "Tim De Pauw",
     "url": "https://tmdpw.eu/"
